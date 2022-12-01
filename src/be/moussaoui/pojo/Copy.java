@@ -13,10 +13,14 @@ public class Copy implements Serializable{
 		
 	}
 	
-	public Copy(int copyNumber, Player owner, VideoGame game) {
-		this.copyNumber= copyNumber;
+	public Copy(Player owner, VideoGame game) {
 		setOwner(owner);
 		setGame(game);
+	}
+	public Copy(int copyNumber, Player owner, VideoGame game) {
+		this(owner, game);
+		this.copyNumber= copyNumber;
+	
 	}
 	
 	public Copy(int copyNumber, Player owner, VideoGame game, Loan loan) {

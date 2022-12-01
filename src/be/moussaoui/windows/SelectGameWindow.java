@@ -19,6 +19,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 
+import be.moussaoui.pojo.Administrator;
+import be.moussaoui.pojo.Player;
 import be.moussaoui.pojo.User;
 import be.moussaoui.pojo.VideoGame;
 
@@ -34,6 +36,7 @@ public class SelectGameWindow  {
 	private JList consolesList;
 	private JList gamesList;
 	private ArrayList<VideoGame> games;
+	private boolean borrower;
 
 	/**
 	 * Launch the application.
@@ -60,6 +63,11 @@ public class SelectGameWindow  {
 	
 	public SelectGameWindow(User user) {
 		this.connectedUser= user;
+		initialize();
+	}
+	public SelectGameWindow(User user, boolean bool) {
+		this.connectedUser= user;
+		this.borrower=bool;
 		initialize();
 	}
 	
@@ -148,7 +156,13 @@ public class SelectGameWindow  {
 				games = VideoGame.getAllGamesByConsole(console);
 				String [] gamesString= new String[games.size()];
 				for(int i=0;i<games.size();i++) {
-					gamesString[i]=games.get(i).getName() + " - crédit : " + games.get(i).getCreditCost();
+					if(connectedUser instanceof Administrator || (connectedUser instanceof Player && borrower)) {
+						gamesString[i]=games.get(i).getName() + " - crédit : " + games.get(i).getCreditCost();
+					}
+					if(connectedUser instanceof Player && !borrower) {
+						gamesString[i]=games.get(i).getName() + " - ";
+					}
+					
 				}
 				gamesList.setListData(gamesString);
 				scroll2.setViewportView(gamesList);
@@ -159,7 +173,16 @@ public class SelectGameWindow  {
 			public void actionPerformed(ActionEvent e) {
 				boolean check = checkSelection();
 				if(check) {
-					modifyUnits();
+					if(connectedUser instanceof Administrator) {
+						modifyUnits();
+					}
+					if(connectedUser instanceof Player && !borrower) {
+						createLoan();
+					}
+					if(connectedUser instanceof Player && borrower) {
+						
+					}
+					
 				}
 			}
 		});
@@ -185,13 +208,26 @@ public class SelectGameWindow  {
 		return false;
 	}
 	private void modifyUnits() {
+
+		DetermineUnitsWindow newWindow=new DetermineUnitsWindow(connectedUser, getGame());
+		frame.dispose();
+		newWindow.getFrame().setVisible(true);
+	}
+	
+	private void createLoan() {
+		CreateLoanWindow newWindow=new CreateLoanWindow(connectedUser, getGame());
+		frame.dispose();
+		newWindow.getFrame().setVisible(true);
+	}
+	
+	
+	
+	private VideoGame getGame() {
 		String gameComp = gamesList.getSelectedValue().toString();
 		String [] gameCompCut = gameComp.split("-");
 		String gameName = gameCompCut[0];
 		
-		VideoGame currentGame = VideoGame.find(gameName);
-		DetermineUnitsWindow newWindow=new DetermineUnitsWindow(connectedUser, currentGame);
-		frame.dispose();
-		newWindow.getFrame().setVisible(true);
+		VideoGame game = VideoGame.find(gameName);
+		return game;
 	}
 }

@@ -6,16 +6,19 @@ import java.awt.Font;
 import javax.swing.JFrame;
 
 import be.moussaoui.pojo.Administrator;
+import be.moussaoui.pojo.Loan;
 import be.moussaoui.pojo.Player;
 import be.moussaoui.pojo.User;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class HomeWindow{
 	private JFrame frame;
 	private User connectedUser;
+	private JLabel jlCreditAmount;
 
 	/**
 	 * Launch the application.
@@ -76,10 +79,19 @@ public class HomeWindow{
 		frame.getContentPane().add(btnLogout);
 		
 		if(connectedUser instanceof Player) {
+			//si connected est un player alors find pour refresh nbr de crédit
+			Player player = (Player)connectedUser;
+			Player refreshPlayer = player.getInfos();
+			jlCreditAmount = new JLabel();
+			jlCreditAmount.setText("Credit : " + refreshPlayer.getCredit() );
+			jlCreditAmount.setFont(new Font("Century", Font.PLAIN, 12));
+			jlCreditAmount.setBounds(10, 32, 136, 14);
+			frame.getContentPane().add(jlCreditAmount);
+			
 			JButton btnReservation = new JButton("Effectuer une réservation de jeu");
 			btnReservation.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					
+					gameReservation();
 				}
 			});
 			btnReservation.setBounds(115, 101, 220, 42);
@@ -91,8 +103,17 @@ public class HomeWindow{
 					putGameOnLoan();
 				}
 			});
-			btnOnLoan.setBounds(135, 154, 156, 42);
+			btnOnLoan.setBounds(140, 154, 156, 42);
 			frame.getContentPane().add(btnOnLoan);
+			
+			JButton btnConsultGameOnLoan = new JButton("Consulter vos jeux en prêts");
+			btnConsultGameOnLoan.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					consultGamesOnLoan();
+				}
+			});
+			btnConsultGameOnLoan.setBounds(115, 201, 220, 42);
+			frame.getContentPane().add(btnConsultGameOnLoan);
 		
 		}
 		if(connectedUser instanceof Administrator) {
@@ -124,8 +145,8 @@ public class HomeWindow{
 	}
 	
 	private void gameReservation() {
-		//HomeWindow newWindow=new HomeWindow(connectedUser);
-		//changeWindow(newWindow.getFrame(), frame);
+		SelectGameWindow newWindow=new SelectGameWindow(connectedUser,true);
+		changeWindow(newWindow.getFrame(), frame);
 	}
 	private void addNewGame() {
 		AddNewGameWindow newWindow=new AddNewGameWindow(connectedUser);
@@ -137,11 +158,19 @@ public class HomeWindow{
 	}
 	
 	private void putGameOnLoan() {
-		HomeWindow home=new HomeWindow(connectedUser);
-		changeWindow(home.getFrame(), frame);
+		SelectGameWindow newWindow=new SelectGameWindow(connectedUser);
+		changeWindow(newWindow.getFrame(), frame);
 	}
 	
-	public void changeWindow(JFrame newWindow, JFrame oldWindow) {
+	private void consultGamesOnLoan() {
+		//charger les loan
+		Player player =(Player)connectedUser;
+		ArrayList<Loan> loans = player.findAllLenderLoans();
+		player.setLenderLoans(loans);
+		ConsultGamesOnLoan newWindow=new ConsultGamesOnLoan(connectedUser, loans);
+		changeWindow(newWindow.getFrame(), frame);
+	}
+	private void changeWindow(JFrame newWindow, JFrame oldWindow) {
 		oldWindow.dispose();
 		newWindow.setVisible(true);
 	}

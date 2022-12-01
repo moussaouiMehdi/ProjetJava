@@ -201,9 +201,14 @@ public class SignUpWindow {
 						String pseudo = tfPseudo.getText();
 						String dobString = tfDoB.getText();
 						LocalDate date = convertStringToLocalDate(dobString);
+						
+						
 						Player newPlayer = new Player(username, password, pseudo, date);
+						//si annif le même jour +2 crédit
+						newPlayer.addBirthdayBonus();
 						boolean success = newPlayer.create();
 						if(success) {
+							
 							JOptionPane.showMessageDialog(frame,"Félicitation " +username + "! Votre compte a été crée avec succès! Connectez-vous dès maintenant.");
 							backToAuthenticationWindow();
 						}

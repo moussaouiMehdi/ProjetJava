@@ -3,6 +3,8 @@ package be.moussaoui.pojo;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import be.moussaoui.dao.LoanDAO;
+
 public class Loan implements Serializable {
 	private static final long serialVersionUID = -3709946114376527758L;
 	private int id;
@@ -98,6 +100,10 @@ public class Loan implements Serializable {
 	public void endLoan() {
 		this.ongoing=false;
 		
+	}
+	public boolean createLoan() {
+		LoanDAO loanDAO = new LoanDAO();
+		return loanDAO.insert(this);
 	}
 
 }

@@ -66,7 +66,6 @@ public class AuthenticationWindow {
 		lblNewLabel.setFont(new Font("Century", Font.BOLD | Font.ITALIC, 22));
 		lblNewLabel.setBounds(152, 11, 119, 23);
 		frame.getContentPane().add(lblNewLabel);
-		
 		JButton btnLogin = new JButton("Se connecter");
 		
 		btnLogin.setBackground(new Color(240, 240, 240));
@@ -76,7 +75,7 @@ public class AuthenticationWindow {
 		JButton btnSignUp = new JButton("S'inscrire");
 		btnSignUp.setBounds(152, 193, 130, 23);
 		frame.getContentPane().add(btnSignUp);
-		
+
 		jlUsername = new JLabel("Nom d'utilisateur");
 		jlUsername.setFont(new Font("Century", Font.PLAIN, 14));
 		jlUsername.setBounds(10, 96, 119, 14);

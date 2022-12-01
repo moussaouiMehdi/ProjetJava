@@ -122,7 +122,11 @@ public class Player extends User{
 	
 	//methods 
 	
-	
+	@Override
+	public String toString() {
+		return super.toString()+ "Joueur: ["+ pseudo + " - " + dateOfBirth + " - " + registrationDate + " - " + credit + "]";
+	}
+
 	public void addBooking(Booking booking) {
 		if(bookings==null) {
 			bookings=new ArrayList<Booking>();
@@ -151,11 +155,17 @@ public class Player extends User{
 		borrowerLoans.add(loan);
 	}
 
-	public boolean loanAllowed() {
-		return false;
+	public boolean loanAllowed(VideoGame game) {
+			return this.credit >= Integer.valueOf(game.getCreditCost()); 
 	}
 	public void addBirthdayBonus() {
-		this.credit += 10;
+		LocalDate now = LocalDate.now();
+		//créer même jour que annif
+		if(this.getDateOfBirth().getDayOfMonth() == now.getDayOfMonth() && this.getDateOfBirth().getMonthValue() == now.getMonthValue()) {
+			this.credit += 2;
+		}
+		//cas
+		
 	}
 	
 	public static boolean check(String pseudo) {
@@ -165,6 +175,23 @@ public class Player extends User{
 	public boolean create() {
 		PlayerDAO playerDAO = new PlayerDAO();
 		return playerDAO.insert(this);
+	}
+
+	public Player getInfos() {
+		Player player = null;
+		PlayerDAO playerDAO = new PlayerDAO();
+		player = playerDAO.find(this.getUserId());
+		return player;
+	}
+
+	public ArrayList<Loan> findAllLenderLoans() {
+		PlayerDAO playerDAO = new PlayerDAO();
+		return playerDAO.findAllLenderLoans(this.getPlayerId());
+	}
+	
+	public boolean update() {
+		PlayerDAO playerDAO = new PlayerDAO();
+		return playerDAO.update(this);
 	}
 
 }

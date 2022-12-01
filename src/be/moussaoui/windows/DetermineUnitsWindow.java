@@ -27,7 +27,6 @@ public class DetermineUnitsWindow {
 	private User connectedUser;
 	private VideoGame game;
 	private JTable table;
-	private JTextField textField;
 	private String newValue;
 	private JLabel jlMessageError;
 
@@ -85,12 +84,10 @@ public class DetermineUnitsWindow {
 		table.setRowHeight(25);
 		table.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
-		textField = new JTextField();
-		frame.getContentPane().add(textField);
-		
 
 		table.setCellSelectionEnabled(true);
 		scrollPane.setViewportView(table);
+		
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{game.getId(), game.getName(),game.getConsole(), game.getCreditCost()},
