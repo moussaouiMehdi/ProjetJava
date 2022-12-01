@@ -20,6 +20,7 @@ public class AuthenticationWindow {
 	private JFrame frame;
 	private JLabel jlUsername;
 	private JLabel jlPassword;
+	private JLabel jlMessageError;
 	private final JTextField tfUsername = new JTextField();
 	private JPasswordField pfPassword;
 	private User connectedUser;
@@ -86,7 +87,7 @@ public class AuthenticationWindow {
 		jlPassword.setBounds(10, 127, 89, 14);
 		frame.getContentPane().add(jlPassword);
 		
-		JLabel jlMessageError = new JLabel("");
+		jlMessageError = new JLabel("");
 		jlMessageError.setForeground(Color.RED);
 		jlMessageError.setBounds(10, 57, 245, 14);
 
@@ -113,9 +114,8 @@ public class AuthenticationWindow {
 					authentication();
 				}
 				else {
-					jlMessageError.setText("Identifiant et/ou mot de passe incorrect");
-				}
-				
+					jlMessageError.setText("Veuillez remplir tous les champs");
+				}	
 			}
 		});
 	}
@@ -132,9 +132,14 @@ public class AuthenticationWindow {
 		String username = tfUsername.getText();
 		String password=new String(pfPassword.getPassword());
 		connectedUser = User.login(username, password);
-		HomeWindow home=new HomeWindow(connectedUser);
-		JOptionPane.showMessageDialog(frame, username + ", bienvenue, vous vous êtes connecté avec succès!",null,JOptionPane.INFORMATION_MESSAGE,null);
-		frame.dispose();
-		home.getFrame().setVisible(true);
+		if(connectedUser == null) {
+			jlMessageError.setText("Identifiant et/ou mot de passe incorrect");
+		}else {
+			HomeWindow home=new HomeWindow(connectedUser);
+			JOptionPane.showMessageDialog(frame, username + ", bienvenue, vous vous êtes connecté avec succès!",null,JOptionPane.INFORMATION_MESSAGE,null);
+			frame.dispose();
+			home.getFrame().setVisible(true);
+		}
+		
 	}
 }
