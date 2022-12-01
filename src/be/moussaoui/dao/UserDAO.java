@@ -3,11 +3,9 @@ package be.moussaoui.dao;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import be.moussaoui.pojo.Administrator;
-import be.moussaoui.pojo.Player;
 import be.moussaoui.pojo.User;
 
 public class UserDAO implements DAO<User>{
