@@ -13,7 +13,7 @@ public class DataBaseConnection {
 		try{ 
 			//chargement de la classe du driver par la JVM
 			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-			String url = "jdbc:ucanaccess://./example.accdb" ; 
+			String url = "jdbc:ucanaccess://./jeuxVideos.accdb" ; 
 			instance = DriverManager.getConnection(url);
 		}
 		catch(ClassNotFoundException ex){

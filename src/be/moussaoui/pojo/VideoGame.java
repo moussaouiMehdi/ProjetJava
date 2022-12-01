@@ -88,11 +88,11 @@ public class VideoGame implements Serializable {
 	
 	//methods
 	
-	public Copy CopyAvailable() {
+	public Copy copyAvailable() {
 		return new Copy();
 	}
 	
-	public void SelectBooking() {
+	public void selectBooking() {
 		
 	}
 

@@ -58,11 +58,11 @@ public class Copy implements Serializable{
 	
 	//methods
 
-	public void RealeaseCCopy() {
+	public void realeaseCCopy() {
 		
 	}
 	
-	public void Borrow() {
+	public void borrow() {
 		
 	}
 	

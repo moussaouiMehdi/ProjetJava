@@ -91,11 +91,11 @@ public class Loan implements Serializable {
 	
 	//methods
 	
-	public void CalculateBalance() {
+	public void calculateBalance() {
 		
 	}
 	
-	public void EndLoan() {
+	public void endLoan() {
 		this.ongoing=false;
 		
 	}

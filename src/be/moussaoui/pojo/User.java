@@ -2,12 +2,14 @@ package be.moussaoui.pojo;
 
 import java.io.Serializable;
 
+import be.moussaoui.dao.UserDAO;
+
 public abstract class User implements Serializable {
 
 	private static final long serialVersionUID = -8664903867854457709L;
 	private String username;
 	private String password;
-	private int id;
+	private int userId;
 	
 	
 	public User() {
@@ -17,7 +19,7 @@ public abstract class User implements Serializable {
 	public User(int id, String username, String password) {
 		this.username = username;
 		this.password = password;
-		this.id = id;
+		this.userId = id;
 	}
 
 	public String getUsername() {
@@ -36,16 +38,20 @@ public abstract class User implements Serializable {
 		this.password = password;
 	}
 
-	public int getId() {
-		return id;
+	public int getUserId() {
+		return userId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setUserId(int id) {
+		this.userId = id;
 	}
 
-	public boolean Login(String username, String password) {
-		return false;
+	public static User login(String username, String password) {
+		return UserDAO.login(username, password);
+	}
+	
+	public static boolean check(String username) {
+		return UserDAO.check(username);
 	}
 
 }

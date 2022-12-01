@@ -3,7 +3,10 @@ package be.moussaoui.pojo;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import be.moussaoui.dao.PlayerDAO;
+
 public class Player extends User{
+	private int playerId;
 	private static final long serialVersionUID = -6463616663056283500L;
 	private int credit;
 	private String pseudo;
@@ -18,22 +21,38 @@ public class Player extends User{
 		
 	}
 	
-	public Player(int id, String username, String password, int credit, String pseudo, LocalDate registrationDate, LocalDate DoB) {
-		super(id,username, password);
+	public Player(String username, String password, String pseudo, LocalDate dob) {
+		this.setUsername(username);
+		this.setPassword(password);
+		this.pseudo = pseudo;
+		this.dateOfBirth=dob;
+	}
+	
+	public Player(int userId, int playerId, String username, String password, int credit, String pseudo, LocalDate registrationDate, LocalDate DoB) {
+		super(userId,username, password);
+		this.setPlayerId(playerId);
 		setCredit(credit);
 		setPseudo(pseudo);
 		setRegistrationDate(registrationDate);
 		setDateOfBirth(DoB);	
 	}
 	
-	public Player(int id, String username, String password, int credit, String pseudo, LocalDate registrationDate, LocalDate DoB, ArrayList<Booking> bookings, ArrayList<Copy> copies, ArrayList<Loan> lenderLoans, ArrayList<Loan> borrowerLoans ) {
-		this(id,username, password, credit, pseudo, registrationDate, DoB);
+	public Player(int id , int playerId, String username, String password, int credit, String pseudo, LocalDate registrationDate, LocalDate DoB, ArrayList<Booking> bookings, ArrayList<Copy> copies, ArrayList<Loan> lenderLoans, ArrayList<Loan> borrowerLoans ) {
+		this(id,playerId, username, password, credit, pseudo, registrationDate, DoB);
 		setBookings(bookings);
 		setCopies(copies);
 		setLenderLoans(lenderLoans);
 		setBorrowerLoans(borrowerLoans);
 	}
 	
+	public int getPlayerId() {
+		return playerId;
+	}
+
+	public void setPlayerId(int playerId) {
+		this.playerId = playerId;
+	}
+
 	public int getCredit() {
 		return credit;
 	}
@@ -132,11 +151,20 @@ public class Player extends User{
 		borrowerLoans.add(loan);
 	}
 
-	public boolean LoanAllowed() {
+	public boolean loanAllowed() {
 		return false;
 	}
-	public void AddBirthdayBonus() {
+	public void addBirthdayBonus() {
 		this.credit += 10;
+	}
+	
+	public static boolean check(String pseudo) {
+		return PlayerDAO.check(pseudo);
+	}
+	
+	public boolean create() {
+		PlayerDAO playerDAO = new PlayerDAO();
+		return playerDAO.insert(this);
 	}
 
 }

@@ -53,7 +53,7 @@ public class Booking implements Serializable{
 	
 	//methods
 	
-	public void Delete() {
+	public void delete() {
 		
 	}
 
