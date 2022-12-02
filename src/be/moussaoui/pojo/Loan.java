@@ -2,8 +2,10 @@ package be.moussaoui.pojo;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import be.moussaoui.dao.LoanDAO;
+
 
 public class Loan implements Serializable {
 	private static final long serialVersionUID = -3709946114376527758L;
@@ -104,6 +106,11 @@ public class Loan implements Serializable {
 	public boolean createLoan() {
 		LoanDAO loanDAO = new LoanDAO();
 		return loanDAO.insert(this);
+	}
+
+	public static ArrayList<Loan> findAllLenderLoans(int playerId) {
+		LoanDAO loanDAO = new LoanDAO();
+		return loanDAO.findAllLenderLoans(playerId);
 	}
 
 }

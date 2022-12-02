@@ -133,6 +133,13 @@ public class Player extends User{
 		}
 		bookings.add(booking);
 	}
+	public void removeBooking(int bookingId) {
+		for(int i = 0;i <bookings.size();i++) {
+			if(bookings.get(i).getBookingNumber() == bookingId) {
+				bookings.remove(i);
+			}
+		}
+	}
 	
 	public void addCopy(Copy copy) {
 		if(copies==null) {
@@ -168,6 +175,14 @@ public class Player extends User{
 		
 	}
 	
+	public void reduceCredit(String credit) {
+		this.credit-= Integer.valueOf(credit);
+	}
+	
+	public void increaseCredit(String credit) {
+		this.credit+= Integer.valueOf(credit);
+	}
+	
 	public static boolean check(String pseudo) {
 		return PlayerDAO.check(pseudo);
 	}
@@ -183,15 +198,14 @@ public class Player extends User{
 		player = playerDAO.find(this.getUserId());
 		return player;
 	}
-
-	public ArrayList<Loan> findAllLenderLoans() {
-		PlayerDAO playerDAO = new PlayerDAO();
-		return playerDAO.findAllLenderLoans(this.getPlayerId());
-	}
 	
 	public boolean update() {
 		PlayerDAO playerDAO = new PlayerDAO();
 		return playerDAO.update(this);
+	}
+	public Player getAllInfos() {
+		PlayerDAO playerDAO = new PlayerDAO();
+		return playerDAO.getAllInfos(this.playerId);
 	}
 
 }

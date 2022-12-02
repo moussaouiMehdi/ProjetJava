@@ -110,6 +110,8 @@ public class CreateLoanWindow {
 				"Nom du jeu", "Console"
 			}
 		) {
+
+			private static final long serialVersionUID = 5921909841504611918L;
 			Class[] columnTypes = new Class[] {
 				Integer.class, String.class
 			};
@@ -176,4 +178,5 @@ public class CreateLoanWindow {
 		}
 		
 	}
+
 }

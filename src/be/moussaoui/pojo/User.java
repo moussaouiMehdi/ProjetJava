@@ -53,5 +53,9 @@ public abstract class User implements Serializable {
 	public static boolean check(String username) {
 		return UserDAO.check(username);
 	}
-
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", username=" + username + ", password=" + password + "]";
+	}
+	
 }

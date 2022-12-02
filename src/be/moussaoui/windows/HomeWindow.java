@@ -63,11 +63,6 @@ public class HomeWindow{
 		lblNewLabel.setBounds(172, 24, 119, 23);
 		frame.getContentPane().add(lblNewLabel);
 		
-		JLabel jlWelcomeMessage = new JLabel("Bienvenue, " + connectedUser.getUsername());
-		jlWelcomeMessage.setFont(new Font("Century", Font.PLAIN, 12));
-		jlWelcomeMessage.setBounds(143, 58, 281, 14);
-		frame.getContentPane().add(jlWelcomeMessage);
-		
 		JButton btnLogout = new JButton("Se déconnecter");
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -79,11 +74,9 @@ public class HomeWindow{
 		frame.getContentPane().add(btnLogout);
 		
 		if(connectedUser instanceof Player) {
-			//si connected est un player alors find pour refresh nbr de crédit
-			Player player = (Player)connectedUser;
-			Player refreshPlayer = player.getInfos();
+			Player player= (Player)connectedUser;
 			jlCreditAmount = new JLabel();
-			jlCreditAmount.setText("Credit : " + refreshPlayer.getCredit() );
+			jlCreditAmount.setText("Credit : " + player.getCredit() );
 			jlCreditAmount.setFont(new Font("Century", Font.PLAIN, 12));
 			jlCreditAmount.setBounds(10, 32, 136, 14);
 			frame.getContentPane().add(jlCreditAmount);
@@ -163,9 +156,9 @@ public class HomeWindow{
 	}
 	
 	private void consultGamesOnLoan() {
-		//charger les loan
+		//charger les loans
 		Player player =(Player)connectedUser;
-		ArrayList<Loan> loans = player.findAllLenderLoans();
+		ArrayList<Loan> loans = Loan.findAllLenderLoans(player.getPlayerId());
 		player.setLenderLoans(loans);
 		ConsultGamesOnLoan newWindow=new ConsultGamesOnLoan(connectedUser, loans);
 		changeWindow(newWindow.getFrame(), frame);

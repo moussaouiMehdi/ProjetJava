@@ -9,8 +9,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import be.moussaoui.pojo.Copy;
-import be.moussaoui.pojo.Loan;
+import be.moussaoui.pojo.Booking;
 import be.moussaoui.pojo.Player;
 import be.moussaoui.pojo.VideoGame;
 
@@ -76,8 +75,18 @@ public class PlayerDAO implements DAO<Player>{
 
 	@Override
 	public boolean update(Player obj) {
-		// TODO Auto-generated method stub
-				return false;
+		boolean success=false;
+		String query="UPDATE player SET credit='"+obj.getCredit()+"' WHERE playerId='"+obj.getPlayerId()+"'";
+		try {
+			PreparedStatement pstmt = (PreparedStatement) this.conn.prepareStatement(query);
+	        pstmt.executeUpdate();
+	        pstmt.close();
+	        success=true;       
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return success;
 	}
 
 	@Override
@@ -130,50 +139,51 @@ public class PlayerDAO implements DAO<Player>{
 		}
 		return false;
 	}
-
-	public ArrayList<Loan> findAllLenderLoans(int playerId) {
-		ArrayList<Loan> loans= new ArrayList<Loan>();
-		String type = "lender";
+	
+	public Player getAllInfos(int playerId) {
+		Player player=null;
+		int cpt=0;
 		String query=
-		"SELECT videogame.gameName, player_loan_details.loanId, player_loan_details.playerId, console.consoleName, console.consoleVersion, loan.startDate, loan.endDate, loan.ongoing, loan.copyId, videogame.creditCost "
-		+ "FROM console INNER JOIN (videogame INNER JOIN (player INNER JOIN (copy INNER JOIN (loan INNER JOIN player_loan_details ON loan.loanId = player_loan_details.loanId) ON copy.copyId = loan.copyId) ON (player.playerId = player_loan_details.playerId) "
-		+ "AND (player.playerId = copy.playerId)) ON videogame.gameNumber = copy.gameNumber) ON console.consoleId = videogame.consoleId "
-		+ "WHERE player_loan_details.type='"+type+"' and player_loan_details.playerId='"+playerId+"'";
-		
+				"SELECT player.playerId, player.pseudo, player.registrationDate, player.dateOfBirth, player.credit, player.userId, booking.bookingId, booking.bookingDate, "
+				+ "booking.gameNumber, videogame.gameName, videogame.creditCost, videogame.consoleId, console.consoleName, console.consoleVersion, user.username, user.password "
+				+ "FROM user INNER JOIN ((console INNER JOIN videogame ON console.consoleId = videogame.consoleId) "
+				+ "INNER JOIN (player INNER JOIN booking ON player.playerId = booking.playerId) ON videogame.gameNumber = booking.gameNumber) "
+				+ "ON user.userId = player.userId WHERE player.playerId='"+playerId+"'";
+				
 		try{
 			ResultSet result = conn.createStatement(
 					ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY).executeQuery(query);
 			while(result.next()){
-				LocalDate startDate =null;
-				LocalDate endDate =null;
-				String gameName = result.getString(1);
-				int loanId = result.getInt(2);
-				String consoleName = result.getString(4);
-				String consoleVersion = result.getString(5);
-				if(result.getDate(6) != null) {
-					startDate = result.getDate(6).toLocalDate();
+				if(cpt==0) {
+					String pseudo = result.getString("pseudo");
+					LocalDate registrationDate = result.getDate("dateOfBirth").toLocalDate();
+					LocalDate dateOfBirth = result.getDate("dateOfBirth").toLocalDate();
+					int credit= result.getInt("credit");
+					int userId = result.getInt("userId");
+					String username = result.getString("username");
+					String password = result.getString("password");
+					player = new Player(userId,playerId,username,password,credit,pseudo,registrationDate,dateOfBirth);
+					cpt++;
 				}
-				if(result.getDate(7) != null) {
-					endDate = result.getDate(7).toLocalDate();
-				}
+				int bookingId = result.getInt("bookingId");
+				LocalDate bookingDate = result.getDate("bookingDate").toLocalDate();
+				int gameNumber = result.getInt("gameNumber");
+				String gameName = result.getString("gameName");
+				int creditCost = result.getInt("creditCost");
+				int consoleId = result.getInt("consoleId");
+				String consoleName = result.getString("consoleName");
+				String consoleVersion = result.getString("consoleVersion");
+				VideoGame game = new VideoGame(gameNumber,gameName,String.valueOf(creditCost),consoleName + " " +consoleVersion);
+				Booking booking = new Booking(bookingId,bookingDate,player, game);
 				
-				//boolean ongoing = result.getBoolean(8);
-				int copyId = result.getInt(9);
-				String creditCost = result.getString(10);
-				
-				Player lender = new Player();
-				lender.setPlayerId(playerId);
-				VideoGame game = new VideoGame(gameName, creditCost, consoleName + " " + consoleVersion);
-				Copy copy = new Copy(copyId, lender, game);
-				Loan loan = new Loan(loanId, startDate, endDate,false, copy, lender, null);
-				loans.add(loan);
+				player.addBooking(booking);
 			}
 		}
 		catch(SQLException e){
 			e.printStackTrace();
 		}
-		return loans;
+		return player;
 	}
 	
 

@@ -3,6 +3,8 @@ package be.moussaoui.pojo;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import be.moussaoui.dao.BookingDAO;
+
 public class Booking implements Serializable{
 	private static final long serialVersionUID = 3648845951039787185L;
 	private int bookingNumber;
@@ -53,8 +55,14 @@ public class Booking implements Serializable{
 	
 	//methods
 	
-	public void delete() {
-		
+	public boolean delete() {
+		BookingDAO bookingDAO = new BookingDAO();
+		return bookingDAO.delete(this);
 	}
+	public boolean createBooking() {
+		BookingDAO bookingDAO = new BookingDAO();
+		return bookingDAO.insert(this);
+	}
+	
 
 }

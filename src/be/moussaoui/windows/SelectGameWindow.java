@@ -180,7 +180,7 @@ public class SelectGameWindow  {
 						createLoan();
 					}
 					if(connectedUser instanceof Player && borrower) {
-						
+						createBooking();
 					}
 					
 				}
@@ -220,7 +220,11 @@ public class SelectGameWindow  {
 		newWindow.getFrame().setVisible(true);
 	}
 	
-	
+	private void createBooking() {
+		CreateBookingWindow newWindow=new CreateBookingWindow(connectedUser, getGame());
+		frame.dispose();
+		newWindow.getFrame().setVisible(true);
+	}
 	
 	private VideoGame getGame() {
 		String gameComp = gamesList.getSelectedValue().toString();
@@ -229,5 +233,6 @@ public class SelectGameWindow  {
 		
 		VideoGame game = VideoGame.find(gameName);
 		return game;
+		
 	}
 }
