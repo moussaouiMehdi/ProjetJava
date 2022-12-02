@@ -155,6 +155,14 @@ public class Player extends User{
 		lenderLoans.add(loan);
 	}
 	
+	public void removeLoan(int loanId) {
+		for(int i = 0;i <lenderLoans.size();i++) {
+			if(lenderLoans.get(i).getId() == loanId) {
+				lenderLoans.remove(i);
+			}
+		}
+	}
+	
 	public void addBorrowerLoan(Loan loan) {
 		if(borrowerLoans==null) {
 			borrowerLoans=new ArrayList<Loan>();

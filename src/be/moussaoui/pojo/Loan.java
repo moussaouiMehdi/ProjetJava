@@ -113,4 +113,9 @@ public class Loan implements Serializable {
 		return loanDAO.findAllLenderLoans(playerId);
 	}
 
+	public boolean delete() {
+		LoanDAO loanDAO = new LoanDAO();
+		return loanDAO.delete(this);
+	}
+
 }

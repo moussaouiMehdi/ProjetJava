@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class HomeWindow{
 	private JFrame frame;
@@ -73,6 +74,12 @@ public class HomeWindow{
 		btnLogout.setBounds(292, 24, 119, 23);
 		frame.getContentPane().add(btnLogout);
 		
+		JLabel jlCreditError = new JLabel("Solde à 0, mettez un jeu en prêt pour pouvoir réserver un jeu");
+		jlCreditError.setForeground(Color.RED);
+		jlCreditError.setBounds(58, 59, 324, 14);
+		jlCreditError.setVisible(false);
+		frame.getContentPane().add(jlCreditError);
+		
 		if(connectedUser instanceof Player) {
 			Player player= (Player)connectedUser;
 			jlCreditAmount = new JLabel();
@@ -81,7 +88,12 @@ public class HomeWindow{
 			jlCreditAmount.setBounds(10, 32, 136, 14);
 			frame.getContentPane().add(jlCreditAmount);
 			
+			
 			JButton btnReservation = new JButton("Effectuer une réservation de jeu");
+			if(player.getCredit() == 0) {
+				jlCreditError.setVisible(true);
+				btnReservation.setEnabled(false);
+			}
 			btnReservation.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					gameReservation();
@@ -167,5 +179,4 @@ public class HomeWindow{
 		oldWindow.dispose();
 		newWindow.setVisible(true);
 	}
-	
 }

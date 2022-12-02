@@ -5,24 +5,25 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
+
 import be.moussaoui.pojo.Loan;
+
 import be.moussaoui.pojo.User;
 
 public class ConsultGamesOnLoan  {
@@ -30,6 +31,8 @@ public class ConsultGamesOnLoan  {
 	private User connectedUser;
 	private JTable table;
 	private ArrayList<Loan> loans;
+	private JButton btnCancelLoan;
+	private String loanId;
 
 	
 
@@ -89,8 +92,22 @@ public class ConsultGamesOnLoan  {
 		table.setRowHeight(25);
 		table.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int rowSelected = table.getSelectedRow();
+				loanId =  String.valueOf(table.getValueAt(rowSelected, 0)) ;
+				String startState = String.valueOf(table.getValueAt(rowSelected, 1)) ;
+				String ongoing = String.valueOf(table.getValueAt(rowSelected, 3)) ;
+				if(startState.equals("Aucune") && ongoing.equals("Non")) {
+					btnCancelLoan.setEnabled(true);
+				}else {
+					btnCancelLoan.setEnabled(false);
+				}
+			}
+		});
+		
 
-		table.setCellSelectionEnabled(true);
 		scrollPane.setViewportView(table);
 		//
 		DefaultTableModel model = new DefaultTableModel() {
@@ -99,7 +116,7 @@ public class ConsultGamesOnLoan  {
 				return false;
 			}
 		};
-		String[] columns = { "Date début", "Date de fin", "En cours ?", " Nom du jeu", "Nom de la console"};
+		String[] columns = { "Identifiant", "Date début", "Date de fin", "En cours ?", " Nom du jeu", "Nom de la console"};
 		model.setColumnIdentifiers(columns);
 		table.setModel(model);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -109,7 +126,7 @@ public class ConsultGamesOnLoan  {
 		cModel.getColumn(2).setPreferredWidth(50);
 		
 		for (Loan loan : loans) {
-			String start="N'a pas encore commencé";
+			String start="Aucune";
 			String end="Aucune";
 			if(loan.getStartDate() !=null) {
 				start = loan.getStartDate().toString();
@@ -120,7 +137,7 @@ public class ConsultGamesOnLoan  {
 			String ongoing = new Boolean(loan.isOngoing()).toString();
 			String gameName = loan.getCopy().getGame().getName();
 			String console = loan.getCopy().getGame().getConsole();
-			model.addRow(new String[] {start,end,boolTrad(ongoing),gameName, console}); 
+			model.addRow(new String[] {String.valueOf(loan.getId()),start,end,boolTrad(ongoing),gameName, console}); 
 		}		
 		table.getColumnModel().getColumn(0).setResizable(false);
 		table.getColumnModel().getColumn(0).setPreferredWidth(300);
@@ -134,7 +151,7 @@ public class ConsultGamesOnLoan  {
 		table.getColumnModel().getColumn(4).setPreferredWidth(250);
 		
 		JButton btnBack = new JButton("Retour");
-		btnBack.setBackground(Color.RED);
+		btnBack.setBackground(Color.LIGHT_GRAY);
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				backToMenu();
@@ -142,6 +159,17 @@ public class ConsultGamesOnLoan  {
 		});
 		btnBack.setBounds(262, 368, 165, 42);
 		frame.getContentPane().add(btnBack);
+		
+		btnCancelLoan = new JButton("Annuler le prêt");
+		btnCancelLoan.setEnabled(false);
+		btnCancelLoan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cancelLoan();
+			}
+		});
+		btnCancelLoan.setBackground(Color.LIGHT_GRAY);
+		btnCancelLoan.setBounds(262, 318, 165, 42);
+		frame.getContentPane().add(btnCancelLoan);
 	}
 	
 	private String boolTrad(String bool) {
@@ -158,5 +186,20 @@ public class ConsultGamesOnLoan  {
 		newWindow.getFrame().setVisible(true);
 		frame.dispose();
 	}
-
+	
+	private void cancelLoan() {
+		/*Player playerCast = (Player)connectedUser;
+		Player player = playerCast.getAllInfos();
+		Loan loan = new Loan();
+		loan.setId(Integer.valueOf(loanId));
+		if(loan.delete()) {
+			player.removeLoan(Integer.valueOf(loanId));
+			player.update();
+			JOptionPane.showMessageDialog(frame,"Prêt annulé");
+			backToMenu();
+		}else {
+			JOptionPane.showMessageDialog(frame,"Impossible d'annuler le prêt");
+		}*/
+		
+	}
 }

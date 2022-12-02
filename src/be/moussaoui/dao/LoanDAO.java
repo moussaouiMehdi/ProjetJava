@@ -71,7 +71,28 @@ public class LoanDAO implements DAO<Loan> {
 
 	@Override
 	public boolean delete(Loan obj) {
-		// TODO Auto-generated method stub
+		boolean success=false;
+		try {
+			
+			String query="DELETE FROM player_loan_details where loanId=?";
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, obj.getId());
+			pstmt.executeUpdate();
+			pstmt.close();
+			success=true;
+			if(success) {
+				query="DELETE FROM loan where loanId=?";
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, obj.getId());
+				pstmt.executeUpdate();
+				pstmt.close();
+				return true;
+			}
+
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 
